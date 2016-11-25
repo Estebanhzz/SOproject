@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,9 +14,25 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('form');
 });
 
-Route::get('form', function () {
-    return view('form');
+Route::post('/', function (Request $request) {
+    $tags = [];
+    $question = str_replace("\n", " ", $request->input('question'));
+
+    $base_path = env('BASE_PATH');
+    $fasttext_path = env('FASTTEXT_PATH');
+    $model_path = env('MODEL_PATH');
+
+    file_put_contents("{$base_path}/predictText.txt", $question);
+
+    exec("{$base_path}/{$fasttext_path} predict {$base_path}/{$model_path}", $tags);
+
+    unlink("{$base_path}/predictText.txt");
+
+    return response()->json([
+        'question' => $question,
+        'tags' => $tags,
+    ]);
 });
