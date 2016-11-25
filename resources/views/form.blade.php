@@ -17,15 +17,16 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-</head>        
+</head>
 <body class="container">
     <div id="app">
         <div class="row">
             <div><h2><strong>Tag Suggestions </strong></h2></div>
             <form role="form" class="form-horizontal" @submit.prevent="formSubmitted">
-                <div class="form-group"> 
+                <div class="form-group">
                     {{ Form::label('Question', 'Question:', array('class' => 'col-sm-2 control-label')) }}
                     <div class="col-sm-8">
+
                         <textarea name="question" class="form-control" v-model="question" required>
                         </textarea>
                     </div>
@@ -37,11 +38,14 @@
                 </div>
             </form>
         </div>
+
+        <div class="row" v-if="loading === true">Cargando tags...</div>
+
         <div class="row" v-if="tags">
             <div class="col-sm-offset-2 col-sm-10">
-              <div v-for="tag in tags" style="margin-right: 12px;display: inline-block;">
-                <span class="glyphicon glyphicon-tag"></span> @{{ tag }}
-              </div>
+                <div v-for="tag in tags" style="margin-right: 12px;display: inline-block;">
+                    <span class="glyphicon glyphicon-tag"></span> @{{ tag }}
+                </div>
             </div>
         </div>
     </div>
@@ -54,17 +58,19 @@
           data: {
             question: null,
             tags: null,
+            loading: false,
           },
           methods: {
             formSubmitted() {
+              this.loading = true;
+
               axios.post('/', { question: this.question })
-                .then(function (response) {
-                  return response.data;
-                })
-                .then(function (data) {
+                .then(response => response.data)
+                .then(data => {
+                  this.loading = false;
                   this.tags = data.tags;
                 })
-                .catch(function (error) {
+                .catch(error => {
                   console.log(error);
                 });
             }
