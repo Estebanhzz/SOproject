@@ -25,17 +25,24 @@
             <form role="form" class="form-horizontal" @submit.prevent="formSubmitted">
                 <div class="form-group"> 
                     {{ Form::label('Question', 'Question:', array('class' => 'col-sm-2 control-label')) }}
-                        <div class="col-sm-8">
-                            <textarea name="question" class="form-control" v-model="question" required>
-                            </textarea>
-                        </div>
+                    <div class="col-sm-8">
+                        <textarea name="question" class="form-control" v-model="question" required>
+                        </textarea>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                    {{ Form::submit('Suggest!', array('class' => 'btn btn-primary', 'role' => 'button')) }}
+                        {{ Form::submit('Suggest!', array('class' => 'btn btn-primary', 'role' => 'button')) }}
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="row" v-if="tags">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div v-for="tag in tags" style="margin-right: 12px;display: inline-block;">
+                <span class="glyphicon glyphicon-tag"></span> @{{ tag }}
+              </div>
+            </div>
         </div>
     </div>
 
@@ -46,6 +53,7 @@
           el: '#app',
           data: {
             question: null,
+            tags: null,
           },
           methods: {
             formSubmitted() {
@@ -54,7 +62,7 @@
                   return response.data;
                 })
                 .then(function (data) {
-                  console.log(data);
+                  this.tags = data.tags;
                 })
                 .catch(function (error) {
                   console.log(error);

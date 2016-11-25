@@ -27,7 +27,7 @@ Route::post('/', function (Request $request) {
 
     file_put_contents("{$base_path}/predictText.txt", $question);
 
-    exec("{$base_path}/{$fasttext_path} predict {$base_path}/{$model_path} {$base_path}/predictText.txt 4", $tags);
+    exec("{$base_path}/{$fasttext_path} predict {$base_path}/{$model_path} {$base_path}/predictText.txt 5", $tags);
 
     unlink("{$base_path}/predictText.txt");
 
