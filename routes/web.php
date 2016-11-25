@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Route::post('/', function (Request $request) {
     $tags = [];
-    $question = str_replace("\n", " ", $request->input('question'));
+    $question = str_replace("\n", ' ', $request->input('question'));
 
     $base_path = env('BASE_PATH');
     $fasttext_path = env('FASTTEXT_PATH');
@@ -27,9 +27,12 @@ Route::post('/', function (Request $request) {
 
     file_put_contents("{$base_path}/predictText.txt", $question);
 
-    exec("{$base_path}/{$fasttext_path} predict {$base_path}/{$model_path} {$base_path}/predictText.txt", $tags);
+    exec("{$base_path}/{$fasttext_path} predict {$base_path}/{$model_path} {$base_path}/predictText.txt 4", $tags);
 
     unlink("{$base_path}/predictText.txt");
+
+    $tags = str_replace('__label__', '', $tags[0]);
+    $tags = explode(' ', $tags);
 
     return response()->json([
         'question' => $question,
