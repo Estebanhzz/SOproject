@@ -39,7 +39,7 @@
             </form>
         </div>
 
-        <div class="row" v-if="loading === true">Cargando tags...</div>
+        <div class="alert alert-info" v-if="loading === true">Cargando tags...</div>
 
         <div class="row" v-if="tags">
             <div class="col-sm-offset-2 col-sm-10">
